@@ -11,7 +11,7 @@ function Home () {
         <Routes>
           <Route index element={<SignUp />}  />
           <Route path='/login' element={<Login />}  />
-          <Route path='/dashobard' element={<Dashboard />}  />
+          <Route path='/dashboard' element={<Dashboard />}  />
         </Routes>
       </BrowserRouter>
     </>
