@@ -35,8 +35,7 @@ export const SignUp = () => {
     const handleUserRegister = (data: UserRegisterType) => {
         console.log(data)
 
-
-        // userRegisterForm.reset()
+        userRegisterForm.reset()
     }
 
 

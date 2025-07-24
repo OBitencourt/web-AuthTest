@@ -4,7 +4,36 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "react-router-dom"
 
+import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ErrorMessage } from '@hookform/error-message'
+import { useForm } from 'react-hook-form'
+
+const userLoginSchema = z.object({
+    email: z.string().nonempty("Digite o seu email."),
+    password: z.string().nonempty("Digite a sua senha.")
+})
+
+type UserLoginType = z.infer<typeof userLoginSchema>
+
 export const Login = () => {
+
+    const userLoginForm = useForm<UserLoginType>({
+        resolver: zodResolver(userLoginSchema),
+        defaultValues: {
+            email: '',
+            password: ''
+        }
+    })
+
+    const handleUserLogin = (data: UserLoginType) => {
+
+        console.log(data)
+
+        userLoginForm.reset()
+    }
+
+
     return (
         <>
             <div className="flex justify-center items-center h-dvh">
@@ -18,24 +47,38 @@ export const Login = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form className="flex flex-col gap-2">
-                            <Label>Nome:</Label>
-                            <Input placeholder="Digite seu nome"/>
+
+                        <form onSubmit={userLoginForm.handleSubmit(handleUserLogin)} {...userLoginForm} className="flex flex-col gap-2">
 
                             <Label>Email:</Label>
-                            <Input placeholder="Digite seu email"/>
+                            <Input {...userLoginForm.register("email")} placeholder="Digite seu email"/>
+                            <ErrorMessage 
+                                name="email"
+                                errors={userLoginForm.formState.errors}
+                                render={({message}) => <p className="text-sm text-red-400 mt-[-20px] mb-4">{message}</p>}
+                            />
+
 
                             <Label>Senha:</Label>
-                            <Input placeholder="Digite a sua senha"/>
+                            <Input {...userLoginForm.register("password")} placeholder="Digite a sua senha"/>
+                            <ErrorMessage 
+                                name="password"
+                                errors={userLoginForm.formState.errors}
+                                render={({message}) => <p className="text-sm text-red-400 mt-[-20px] mb-4">{message}</p>}
+                            />
+
+                            <Button type="submit" className="w-full">
+                                Login
+                            </Button>
+
                         </form>
+
                     </CardContent>
                     <CardFooter className="flex flex-col">
                         <span className="text-sm underline mb-3 self-end">
                             Forgot your password?
                         </span>
-                        <Button className="w-full">
-                            Login
-                        </Button>
+                        
                         <span className="text-sm mt-8 flex gap-1">
                             Dont have an account? 
 
