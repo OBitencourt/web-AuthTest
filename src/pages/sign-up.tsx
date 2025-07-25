@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from "react-hook-form"
 import { ErrorMessage } from '@hookform/error-message'
+import { useRegisterUser } from "@/http/use-register-user"
 
 const userRegisterSchema = z.object({
     name: z.string().nonempty('Digite um nome de usuário.'),
@@ -23,6 +24,8 @@ type UserRegisterType = z.infer<typeof userRegisterSchema>
 
 export const SignUp = () => {
 
+    const { mutateAsync: registerUser } = useRegisterUser()
+
     const userRegisterForm = useForm<UserRegisterType>({
         resolver: zodResolver(userRegisterSchema),
         defaultValues: {
@@ -32,8 +35,13 @@ export const SignUp = () => {
         }
     })
 
-    const handleUserRegister = (data: UserRegisterType) => {
-        console.log(data)
+    async function handleUserRegister (data: UserRegisterType) {
+        
+        await registerUser({
+            name: data.name,
+            email: data.email,
+            password: data.password
+        })
 
         userRegisterForm.reset()
     }

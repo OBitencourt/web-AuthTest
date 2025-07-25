@@ -19,7 +19,7 @@ type UserLoginType = z.infer<typeof userLoginSchema>
 
 export const Login = () => {
 
-    const { mutateAsync: createLogin } = useLoginUser()
+    const { mutateAsync: loginUser } = useLoginUser()
 
     const userLoginForm = useForm<UserLoginType>({
         resolver: zodResolver(userLoginSchema),
@@ -31,7 +31,7 @@ export const Login = () => {
 
     async function handleUserLogin (data: UserLoginType) {
 
-        await createLogin({
+        await loginUser({
             email: data.email,
             password: data.password
         })
