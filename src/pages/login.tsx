@@ -8,6 +8,7 @@ import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ErrorMessage } from '@hookform/error-message'
 import { useForm } from 'react-hook-form'
+import { useLoginUser } from "@/http/use-login-user"
 
 const userLoginSchema = z.object({
     email: z.string().nonempty("Digite o seu email."),
@@ -18,6 +19,8 @@ type UserLoginType = z.infer<typeof userLoginSchema>
 
 export const Login = () => {
 
+    const { mutateAsync: createLogin } = useLoginUser()
+
     const userLoginForm = useForm<UserLoginType>({
         resolver: zodResolver(userLoginSchema),
         defaultValues: {
@@ -26,9 +29,13 @@ export const Login = () => {
         }
     })
 
-    const handleUserLogin = (data: UserLoginType) => {
+    async function handleUserLogin (data: UserLoginType) {
 
-        console.log(data)
+        await createLogin({
+            email: data.email,
+            password: data.password
+        })
+        
 
         userLoginForm.reset()
     }
