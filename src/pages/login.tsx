@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import { z } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,6 +20,7 @@ type UserLoginType = z.infer<typeof userLoginSchema>
 export const Login = () => {
 
     const { mutateAsync: loginUser } = useLoginUser()
+    let navigate = useNavigate()
 
     const userLoginForm = useForm<UserLoginType>({
         resolver: zodResolver(userLoginSchema),
@@ -36,8 +37,10 @@ export const Login = () => {
             password: data.password
         })
         
-
         userLoginForm.reset()
+        navigate({
+            pathname: '/dashboard'
+        })
     }
 
 
