@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth/auth-context"
 import { HomeIcon, SquareSlashIcon, Settings, Apple, LogOut } from 'lucide-react'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 
@@ -11,6 +11,7 @@ export const Dashboard = () => {
     let navigate = useNavigate()
     const { logout } = useAuth()
     const [cookies] = useCookies(['token', 'user'])
+    const [userInfo, setUserInfo] = useState({})
 
     const { user, token } = cookies
 
@@ -27,6 +28,28 @@ export const Dashboard = () => {
             pathname: '/login'
         })
     }
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/user/${user._id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar usuário')
+            }
+            return response.json()
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+    }, [])
+
 
     return (
 
